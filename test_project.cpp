@@ -39,10 +39,69 @@ public:
 
     // Method to execute the scheduling logic
     void run() {
-        cout << "Running scheduler...\n";
-        // Add your scheduling logic here
-        // For example, alternate between sjfQueue and fcfsQueue
+    const int SJF_CYCLE_LIMIT = 100;
+    const int FCFS_CYCLE_LIMIT = 200;
+    const int SJF_QUANTUM = 20;  // Time slice for each SJF process
+    const int FCFS_QUANTUM = 50; // Time slice for each FCFS process
+
+    int sjfCycleCount = 0;
+    int fcfsCycleCount = 0;
+
+    std::cout << "Starting refined scheduling...\n";
+
+    while (!sjfQueue.empty() || !fcfsQueue.empty()) {
+        // Process the SJF Queue with time-slicing
+        while (!sjfQueue.empty() && sjfCycleCount < SJF_CYCLE_LIMIT) {
+            Process process = sjfQueue.front();
+            sjfQueue.pop();
+
+            int allocateCycles = std::min(process.cycles, SJF_QUANTUM); // Allocate quantum or remaining cycles
+            process.cycles -= allocateCycles;
+            sjfCycleCount += allocateCycles;
+
+            std::cout << "Executing SJF Process " << process.id 
+                      << " for " << allocateCycles << " cycles. Remaining cycles: " 
+                      << process.cycles << std::endl;
+
+            if (process.cycles > 0) {
+                sjfQueue.push(process);  // Re-add to queue if not finished
+            }
+        }
+
+        // Reset SJF counter and switch to FCFS if cycle limit reached
+        if (sjfCycleCount >= SJF_CYCLE_LIMIT || sjfQueue.empty()) {
+            sjfCycleCount = 0;
+
+            // Process the FCFS Queue with time-slicing
+            while (!fcfsQueue.empty() && fcfsCycleCount < FCFS_CYCLE_LIMIT) {
+                Process process = fcfsQueue.front();
+                fcfsQueue.pop();
+
+                int allocateCycles = std::min(process.cycles, FCFS_QUANTUM); // Allocate quantum or remaining cycles
+                process.cycles -= allocateCycles;
+                fcfsCycleCount += allocateCycles;
+
+                std::cout << "Executing FCFS Process " << process.id 
+                          << " for " << allocateCycles << " cycles. Remaining cycles: " 
+                          << process.cycles << std::endl;
+
+                if (process.cycles > 0) {
+                    fcfsQueue.push(process);  // Re-add to queue if not finished
+                }
+            }
+
+            // Reset FCFS counter if limit reached
+            if (fcfsCycleCount >= FCFS_CYCLE_LIMIT || fcfsQueue.empty()) {
+                fcfsCycleCount = 0;
+            }
+        }
     }
+
+    std::cout << "All processes completed." << std::endl;
+}
+
+
+
 };
 
 // Function to simulate the booting sequence
