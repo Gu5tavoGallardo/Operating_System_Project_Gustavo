@@ -1,5 +1,5 @@
-#ifndef SCHEDULER_H
-#define SCHEDULER_H
+#ifndef Schedular_h
+#define Scheduker_h
 
 #include <iostream>
 #include <queue>
