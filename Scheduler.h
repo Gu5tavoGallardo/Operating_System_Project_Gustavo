@@ -23,16 +23,16 @@ public:
     void addProcess(Process process) {
         if (process.cycles <= 50) {
             sjfQueue.push(process);
-            std::cout << "Process " << process.id << " added to SJF queue with " << process.cycles << " cycles.\n";
+            cout << "Process " << process.id << " added to SJF queue with " << process.cycles << " cycles.\n";
         } else {
             fcfsQueue.push(process);
-            std::cout << "Process " << process.id << " added to FCFS queue with " << process.cycles << " cycles.\n";
+            cout << "Process " << process.id << " added to FCFS queue with " << process.cycles << " cycles.\n";
         }
     }
 
     // Method to execute the scheduling logic
     void run() {
-        std::cout << "Running scheduler...\n";
+        cout << "Running scheduler...\n";
         // Add your scheduling logic here
         // For example, alternate between sjfQueue and fcfsQueue
     }
